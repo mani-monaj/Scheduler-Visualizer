@@ -28,4 +28,4 @@
 
 </head>
 
-<body>
+<body onunload="jsPlumb.unload();">
