@@ -16,16 +16,20 @@
 	</header>
 	
 	<article>
+		<?php
+            require_once("./inc/visualizer.inc.php");
+            $viz = new CVisualizer(5, 10, 2);
+            $core0 = array("isOccupied" => true, "isDevil" => true, "pName" => "h");
+            $core1 = array("isOccupied" => true, "isDevil" => true, "pName" => "p");
+            $cores = array($core0, $core1);
+            $viz->drawNode($cores, "core-1");
+            $viz->drawNode($cores, "core-2");
+        ?>
 		
-		<h1>Article Header</h1>
-		
-		<p>Etiam pretium odio eu mi convallis vitae varius neque pharetra. Nulla vestibulum nisi ut sem cursus sed mattis nisi egestas.</p>
-		
-		<h2>Article Subhead</h2>
-		
-		<p>Vestibulum lacus erat, volutpat vel dignissim at, fringilla ut felis.</p>
+        <!--
         <div id="node0" style="position: absolute; block; width:100px; height:100px; border:1px solid red; left:10px; top:100px">Box 0</div>
         <div id="node1" style="position: absolute; width:100px; height:100px; border:1px solid red; left:300px; top:400px">Box 1</div>
+        -->
 	</article>
 	
 	<aside>

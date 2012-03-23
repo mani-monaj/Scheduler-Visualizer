@@ -146,6 +146,30 @@ ins {background-color: #fcd700; color: #000; text-decoration: none;}
 mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: bold;}
 
 
+div.node {
+    border: 1px solid black;
+    float: left;
+}
+
+div.core {
+    border: 1px solid gray;
+    float:left;
+    width: 40px;
+    height: 40px;
+}
+
+div.occupied-core {
+    background-color: lightgreen;
+}
+
+div.shared-resource {
+    border: 1px solid blue;
+    height: 20px;
+}
+
+div.contention {
+    background-color: red;
+}
 
 
 
