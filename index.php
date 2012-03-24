@@ -23,8 +23,11 @@
             {
                 echo $viz->getError();
             }
-            
-            $viz->visualize();
+            else
+            {
+                $viz->visualize();
+                //print_r($viz->generateJSFromCommunication());
+            }
             
             //$core0 = array("isOccupied" => true, "isDevil" => true, "pName" => "h");
             //$core1 = array("isOccupied" => true, "isDevil" => true, "pName" => "p");

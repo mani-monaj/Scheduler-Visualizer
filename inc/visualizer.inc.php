@@ -14,10 +14,12 @@ class CVisualizer
     private $mD;    //Devil Matrix
     
     private $errorList;
-    
+    private $idMap;
     
     function init($numnodes, $corespernode, $namesfile, $devilfile, $commfile, $solfile) {
         $this->errorList = array();
+        $this->idMap = array();
+        
         $this->numNodes = $numnodes;
         $this->coresPerNode = $corespernode;
         $this->numCores = $numnodes * $corespernode;
@@ -74,7 +76,7 @@ class CVisualizer
         
         if (($row != $this->numCores) || ($col != $this->numProcesses))
         {
-            $this->logError("Error: Solution matrix size should be ($this->numProcesses, $this->numCores), but it is ($row, $col).");
+            $this->logError("Error: Solution matrix size should be ($this->numCores, $this->numProcesses), but it is ($row, $col).");
             return false;
         }
 
@@ -161,6 +163,16 @@ class CVisualizer
                 {
                     $class .= " devil";
                 }
+                
+//                $id = $core["id"];
+//                $buddies = array_search($this->mC, "1");
+//                if (!empty($buddies))
+//                {
+//                    $buddies_str = implode(",", $buddies);
+//                    $text = 
+//                }
+                $this->idMap[$index] = $id.'-c'.$i;
+
             }
             else
             {
@@ -179,16 +191,51 @@ class CVisualizer
  
     public function visualize()
     {
+        $this->idMap = array();
         for ($i = 0; $i < $this->numNodes; $i++)
         {
             $cores = array();
             for ($j = 0; $j < $this->coresPerNode; $j++)
             {
-                $index = ($i * $this->coresPerNode) + $j;               
-                $cores[$j] = array("isOccupied" => false);
+                $index = ($i * $this->coresPerNode) + $j;    
+                
+                $process_id = array_search(1, $this->mX[$index]);
+                if ($process_id === FALSE)
+                {
+                    $cores[$j]["isOccupied"] = false;                    
+                }
+                else
+                {
+                    $cores[$j]["isOccupied"] = true;
+                    $cores[$j]["isDevil"] = $this->mD[$process_id][1];
+                    $cores[$j]["pName"] = $this->processNames[$process_id][1];
+                    $cores[$j]["index"] = $process_id;
+                }
+                
             }
             $this->drawNode($cores, "node-$i", "", "");
         }
+    }
+    
+    public function generateJSFromCommunication()
+    {
+        $js = "";
+        $js .= "var conn = [\n";
+        
+        for ($index = 0; $index < $this->numProcesses; $index++)
+        {
+            $htmlid = $this->idMap[$index];
+            $buddies = array_keys($this->mC[$index], 1);            
+            $buddies_htmlids = array();
+            foreach ($buddies as $buddy)
+            {
+                $buddies_htmlids[] = $this->idMap[$buddy];
+            }
+            $buddies_str = implode(",", $buddies_htmlids);
+            $js .= "{  htmlid: '$htmlid', buddies_htmlids: '$buddies_str'},\n";            
+        }
+        $js .= "];\n";
+        return $js;
     }
 }
 ?>

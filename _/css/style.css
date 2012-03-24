@@ -149,6 +149,7 @@ mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: b
 div.node {
     border: 1px solid black;
     float: left;
+    margin: 3px;
 }
 
 div.core {
@@ -156,19 +157,34 @@ div.core {
     float:left;
     width: 40px;
     height: 40px;
+    margin: 1px;
+    text-align: center;
+}
+
+div.core:hover {
+    background-color: blue;
 }
 
 div.occupied-core {
     background-color: lightgreen;
 }
 
+div.devil {
+    background-color: red;
+}
 div.shared-resource {
-    border: 1px solid blue;
+    border: 1px solid gray;
     height: 20px;
+    margin: 1px;
+    background-color: lightgray;
 }
 
 div.contention {
     background-color: red;
+}
+
+.connection{
+
 }
 
 
