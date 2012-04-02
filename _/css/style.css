@@ -146,10 +146,11 @@ ins {background-color: #fcd700; color: #000; text-decoration: none;}
 mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: bold;}
 
 
+
 div.node {
     border: 1px solid black;
     float: left;
-    margin: 3px;
+    margin: 6px 3px;
 }
 
 div.core {
@@ -161,9 +162,11 @@ div.core {
     text-align: center;
 }
 
+/*
 div.core:hover {
     background-color: blue;
 }
+*/
 
 div.occupied-core {
     background-color: lightgreen;

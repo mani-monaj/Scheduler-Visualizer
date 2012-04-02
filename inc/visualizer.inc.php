@@ -72,6 +72,18 @@ class CVisualizer
             return false;
         }
         
+        // Break down symetery in Communication Matrix to avoid duplicates
+//        for ($i = 0; $i < $this->numProcesses; $i++)
+//        {
+//            for ($j = 0; $j < $this->numProcesses; $j++)
+//            {
+//                if ($i >= $j)
+//                {
+//                    $this->mC[$i][$j] = 0;
+//                }
+//            }
+//        }
+        
         list($row, $col) = $this->readMatrixFromFile($this->mX, $solfile, "\n", " ");
         
         if (($row != $this->numCores) || ($col != $this->numProcesses))
@@ -135,8 +147,12 @@ class CVisualizer
         }
     }
     
-    public function drawNode($cores, $id, $class = "", $text = "")
+    public function drawNode($cores, $id, $class = "", $text = "", $break = false)
     {
+        if ($break) 
+        {
+            echo '<br clear="all" style="clear: all;" />';
+        }
         echo '<div id="'.$id.'" class="node '.$class.'">';
         if (!empty($text)) 
         {
@@ -187,11 +203,13 @@ class CVisualizer
         echo '<br clear="all" style="clear: all;" />';
         echo '<div class="shared-resource '.$class.'"></div>';
         echo '</div>';
+        
     }
  
     public function visualize()
     {
         $this->idMap = array();
+        $break_size = floor(sqrt($this->numNodes));
         for ($i = 0; $i < $this->numNodes; $i++)
         {
             $cores = array();
@@ -212,12 +230,13 @@ class CVisualizer
                     $cores[$j]["index"] = $process_id;
                 }
                 
-            }
-            $this->drawNode($cores, "node-$i", "", "");
+            } 
+            $this->drawNode($cores, "node-$i", "", "", ($i > 0) && ($i % $break_size == 0));
+            
         }
     }
     
-    public function generateJSFromCommunication()
+    public function generateJSONForConnections()
     {
         $js = "";
         $js .= "var conn = [\n";
@@ -237,5 +256,6 @@ class CVisualizer
         $js .= "];\n";
         return $js;
     }
+    
 }
 ?>
