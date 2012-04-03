@@ -10,7 +10,7 @@ class CVisualizer
         
     private $mX;    //Solution Matrix
     private $mP;    //Power Matrix
-    private $mC;    //Communication Matrix
+    private $mC, $mC_NS;    //Communication Matrix (+ non-symeteric)
     private $mD;    //Devil Matrix
     
     private $errorList;
@@ -72,17 +72,19 @@ class CVisualizer
             return false;
         }
         
+        
+        $this->mC_NS = $this->mC;
         // Break down symetery in Communication Matrix to avoid duplicates
-//        for ($i = 0; $i < $this->numProcesses; $i++)
-//        {
-//            for ($j = 0; $j < $this->numProcesses; $j++)
-//            {
-//                if ($i >= $j)
-//                {
-//                    $this->mC[$i][$j] = 0;
-//                }
-//            }
-//        }
+        for ($i = 0; $i < $this->numProcesses; $i++)
+        {
+            for ($j = 0; $j < $this->numProcesses; $j++)
+            {
+                if ($i >= $j)
+                {
+                    $this->mC_NS[$i][$j] = 0;
+                }
+            }
+        }
         
         list($row, $col) = $this->readMatrixFromFile($this->mX, $solfile, "\n", " ");
         
@@ -153,7 +155,9 @@ class CVisualizer
         {
             echo '<br clear="all" style="clear: all;" />';
         }
-        echo '<div id="'.$id.'" class="node '.$class.'">';
+
+        echo '<div id="'.$id.'" class="node '.$class.'" >';
+        
         if (!empty($text)) 
         {
             echo "<span>$text</span";
@@ -187,6 +191,7 @@ class CVisualizer
 //                    $buddies_str = implode(",", $buddies);
 //                    $text = 
 //                }
+                
                 $this->idMap[$index] = $id.'-c'.$i;
 
             }
@@ -194,6 +199,7 @@ class CVisualizer
             {
                 $class .= " empty-core";
             }
+            
             echo '<div id="'.$id.'-c'.$i.'" class="core '.$class.'">';
             echo ($isOccupied) ? $pName : "";
             echo '</div>';
@@ -236,7 +242,7 @@ class CVisualizer
         }
     }
     
-    public function generateJSONForConnections()
+    public function generateJSONForConnections($sym = true)
     {
         $js = "";
         $js .= "var conn = [\n";
@@ -244,7 +250,7 @@ class CVisualizer
         for ($index = 0; $index < $this->numProcesses; $index++)
         {
             $htmlid = $this->idMap[$index];
-            $buddies = array_keys($this->mC[$index], 1);            
+            $buddies = array_keys( $sym ? $this->mC[$index] : $this->mC_NS[$index], 1);            
             $buddies_htmlids = array();
             foreach ($buddies as $buddy)
             {
@@ -256,6 +262,31 @@ class CVisualizer
         $js .= "];\n";
         return $js;
     }
+    
+    //$("#node-0-c0").hover(function () { $("#"+this.id+",#node-3-c1,#node-0-c1").hilight() }, function () {$("#"+this.id+",#node-3-c1,#node-0-c1").lolight() } );
+    public function generateJQueryForHighlights($sym = true)
+    {
+        $js = "";
+        for ($index = 0; $index < $this->numProcesses; $index++)
+        {
+            $htmlid = $this->idMap[$index];            
+            $buddies = array_keys( $sym ? $this->mC[$index] : $this->mC_NS[$index], 1);
+            if (empty($buddies)) continue;
+            $buddies_htmlids = array();
+            $buddies_htmlids[] = $htmlid;
+            foreach ($buddies as $buddy)
+            {
+                $buddies_htmlids[] = $this->idMap[$buddy];
+            }
+            $buddies_str = "#".implode(",#", $buddies_htmlids);
+            $js .= sprintf("\t$('#%s').hover(
+                function () { $('%s').hilight() }, 
+                function () { $('%s').lolight() } );\n", 
+                $htmlid, $buddies_str, $buddies_str);
+        }
+        return $js;
+    }
+        
     
 }
 ?>

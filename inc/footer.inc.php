@@ -7,7 +7,7 @@
 <script type="text/javascript">
     (function($){})(window.jQuery);
     jsPlumb.bind("ready", function() {        
-        <?php echo $viz->generateJSONForConnections(); ?> 
+        <?php echo $viz->generateJSONForConnections(false); ?> 
         for (var row in conn)
         {
             var node = conn[row];
@@ -16,53 +16,65 @@
             //document.writeln(buddiesStr);
             
             $("pre#debug").append('Source : ' + sourceStr);
+            $("pre#debug").append('| Buddies : ' + buddiesStr + '<br />');
             if (buddiesStr.length == 0) continue;
             var buddies = buddiesStr.split(",");
-            $("pre#debug").append('Buddies : ' + buddiesStr + '<br />');
-            //document.write('Source:'+source);
             
-            $("#"+sourceStr).hover(
-                function () {
-                    $(this).css({ opacity: 1.0});
-                    for (var col in buddies)
-                    {
-                        var buddy = buddies[col];
-                        $("#"+buddy).css({ opacity: 1.0});
-                    }
-                }, 
-                function () {
-                    $(this).css({ opacity: 0.25});
-                    for (var col in buddies)
-                    {
-                        var buddy = buddies[col];
-                        $("#"+buddy).css({ opacity: 0.25});
-                    }
-                }
-            );
+            //document.write('Source:'+source);
+            /*
+            
+                */
             for (var col in buddies)
             {            
                 var buddy = buddies[col];
                 //document.write('Buddy :'+ buddy);
                 //$("pre#debug").append('Buddy : ' + buddy);
+                var rint = Math.round(0xffffff * Math.random());
+                var color = ('#0' + rint.toString(16)).replace(/^#0([0-9a-f]{6})$/i, '#$1');
                 jsPlumb.connect({ 
                     source: sourceStr, 
-                    anchor: ["BottomCenter", "TopCenter"],
+                    //anchor: ["BottomCenter", "TopCenter"],
+                    anchor: "AutoDefault",
                     target: buddy, 
-                    anchor: ["BottomCenter", "TopCenter"],
+                    //anchor: ["BottomCenter", "TopCenter"],
+                    anchor: "AutoDefault",
                     endpoint:[ "Dot", { cssClass:"myEndpoint", radius: 2 } ],
-                    connector: [ "Flowchart", 10],     
-                    endpointStyle: { fillStyle:"yellow" },
-                    paintStyle: { strokeStyle:"blue", lineWidth:2 }
+                    connector: [ "StateMachine", 50],     
+                    //connector: [ "Flowchart", 10],     
+                    endpointStyle: { fillStyle: color },
+                    paintStyle: { strokeStyle: color, lineWidth:4 }
                 });
             }
             //$("pre#debug").append('<br />');
         }
     });
-    
+      
     /* trigger when page is ready */
+    
+    
     $(document).ready(function (){
-       $('.node').css({ opacity: 0.25});
+       
+       $(".core").css({ opacity: 0.25});       
+       
+       
+       $.fn.hilight = function() {
+            return $(this).each(function() {
+                $(this).css("opacity", "1")
+            });
+        };
+        
+        $.fn.lolight = function() {
+            return $(this).each(function() {
+                $(this).css("opacity", "0.25")
+            });
+        };
+        
+        <?php echo $viz->generateJQueryForHighlights(); ?>
     });
+    
+    
+    
+    
 </script>
 <script src="_/js/functions.js"></script>
 <pre id="debug">

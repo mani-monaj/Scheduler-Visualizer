@@ -5,12 +5,12 @@ p: number of processes
 p <= n
 
 - All numberings start from 0.
-- All matrixes files should be in CSV (Text) format with <SPACE> az coloumn seperator and <NEWLINE> [`\n'] as row seperator.
+- All matrices files should be in CSV (Text) format with <SPACE> az coloumn seperator and <NEWLINE> [`\n'] as row seperator.
 - There is no naming standard yet.
 
 The C (Communication) matrix should be a binary CSV Matrix of size (p x p) which shows if two processes communicate with each other or not. (1; true, 0: false)
 
-The D (Devils) matrix should be a binary (p x 2) matrix. First coloumn is the process ID (0 .. p-1) and the second coloumn indicates if it is devil or not (1: true, 0: false)
+he D (Devils) matrix should be a binary (p x 2) matrix. First coloumn is the process ID (0 .. p-1) and the second coloumn indicates if it is devil or not (1: true, 0: false)
 
 The N (Names) matrix is the same as D with the difference that the second coloumn is a text. The names should not be wrapped with anything, therefor no space (or any other special charachters) are allowed.
 
