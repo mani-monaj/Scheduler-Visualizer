@@ -19,7 +19,8 @@
 		<?php
             require_once("./inc/visualizer.inc.php");
             $viz = new CVisualizer();
-            if (!$viz->init(4, 2, "./data/dummy-names.csv", "./data/dummy-devils.csv", "./data/dummy-c.csv", "./data/dummy-x.csv"))
+            //if (!$viz->init(4, 2, "./data/dummy-names.csv", "./data/dummy-devils.csv", "./data/dummy-c.csv", "./data/dummy-x.csv"))
+            if (!$viz->init(100, 2, "", "./data/arash-d.csv", "./data/arash-c.csv", "./data/arash-x.csv"))
             {
                 echo $viz->getError();
             }

@@ -146,15 +146,18 @@ ins {background-color: #fcd700; color: #000; text-decoration: none;}
 mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: bold;}
 
 
-
+body {
+    background-color: #FFEFA6;
+}
 div.node {
     border: 1px solid black;
     float: left;
     margin: 6px 3px;
+    background-color: #C8AF41;
 }
 
 div.core {
-    border: 1px solid gray;
+    border: 1px solid black;
     float:left;
     width: 40px;
     height: 40px;
@@ -169,11 +172,11 @@ div.core:hover {
 */
 
 div.occupied-core {
-    background-color: lightgreen;
+    background-color: #48B93D;
 }
 
 div.devil {
-    background-color: red;
+    background-color: #FD787E;
 }
 div.shared-resource {
     border: 1px solid gray;
@@ -183,7 +186,7 @@ div.shared-resource {
 }
 
 div.contention {
-    background-color: red;
+    background-color: #C64147;
 }
 
 .connection{

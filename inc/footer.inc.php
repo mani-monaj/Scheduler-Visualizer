@@ -1,12 +1,14 @@
 <!-- here comes the javascript -->
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
 <script type="text/javascript" src="./_/js/jquery.jsPlumb-1.3.7-all-min.js "></script>
 
 <!-- this is where we put our custom functions -->
 <script type="text/javascript">
     (function($){})(window.jQuery);
-    jsPlumb.bind("ready", function() {        
+    jsPlumb.bind("ready", function() {  
+        //return;
         <?php echo $viz->generateJSONForConnections(false); ?> 
         for (var row in conn)
         {
@@ -39,10 +41,12 @@
                     //anchor: ["BottomCenter", "TopCenter"],
                     anchor: "AutoDefault",
                     endpoint:[ "Dot", { cssClass:"myEndpoint", radius: 2 } ],
-                    connector: [ "StateMachine", 50],     
-                    //connector: [ "Flowchart", 10],     
-                    endpointStyle: { fillStyle: color },
-                    paintStyle: { strokeStyle: color, lineWidth:4 }
+                    //connector: [ "StateMachine", 50],     
+                    connector: [ "Flowchart", 10],     
+                    //endpointStyle: { fillStyle: color },
+                    endpointStyle: { fillStyle: "lightgray" },
+                    //paintStyle: { strokeStyle: color, lineWidth:4 }
+                    paintStyle: { strokeStyle: "lightgray", lineWidth:4 }
                 });
             }
             //$("pre#debug").append('<br />');
@@ -54,18 +58,20 @@
     
     $(document).ready(function (){
        
-       $(".core").css({ opacity: 0.25});       
+       //$(".core").css({ opacity: 0.75});       
        
        
        $.fn.hilight = function() {
             return $(this).each(function() {
-                $(this).css("opacity", "1")
+                $(this).css("border-color", "red")
+                //$(this).effect("highlight", {}, 1000);
             });
         };
         
         $.fn.lolight = function() {
             return $(this).each(function() {
-                $(this).css("opacity", "0.25")
+                var col = $(this).css("background-color");
+                $(this).css("border-color", col)
             });
         };
         

@@ -28,14 +28,41 @@ class CVisualizer
         $this->processNames = array();
         $this->mX = array();
         $this->mC = array();
-        $this->mD = array();
+        $this->mD = array();        
         
-        list($this->numProcesses, $col) = $this->readMatrixFromFile($this->processNames, $namesfile, "\n", " ");
-              
+        list($this->numProcesses, $col) = $this->readMatrixFromFile($this->mD, $devilfile, "\n", " ");
+        
         if ($this->numProcesses == 0)
         {
-            $this->logError("Error : Number of processes in $namesfile is 0!");
+            $this->logError("Error : Number of processes in $devilfile is 0!");
             return false;
+        }
+                
+        
+        if ($col != 2)
+        {
+            $this->logError("Error : Format of $devilfile is incorrect.");
+            return false;
+        }
+        
+        list($row, $col) = $this->readMatrixFromFile($this->processNames, $namesfile, "\n", " ");
+
+        if ($row == 0)
+        {
+            $this->proccessNames = array();
+            $this->logError("Warning: problem with the $namesfile. Using dummy names.");
+            for ($i = 0; $i < $this->numProcesses; $i++)
+            {
+                $this->processNames[$i][0] = $i;
+                $this->processNames[$i][1] = sprintf("pr%d", $i);
+            }
+            $col = 2;
+            
+        }        
+        else if ($row != $this->numProcesses)
+        {
+            $this->logError("Error : Number of rows in $namesfile ($row) is inconsistent with number of processes ($this->numProcesses)");
+            return false; 
         }
         
         if ($col != 2)
@@ -47,20 +74,6 @@ class CVisualizer
         if ($this->numProcesses > $this->numCores)
         {
             $this->logError("Error : Number of processes can not be more than cores");
-            return false;
-        }
-        
-        list($row, $col) = $this->readMatrixFromFile($this->mD, $devilfile, "\n", " ");
-        
-        if ($row != $this->numProcesses)
-        {
-            $this->logError("Error : Number of rows in $devilfile ($row) is inconsistent with number of processes ($this->numProcesses)");
-            return false; 
-        }
-        
-        if ($col != 2)
-        {
-            $this->logError("Error : Format of $devilfile is incorrect.");
             return false;
         }
         
