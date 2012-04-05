@@ -190,7 +190,7 @@ class CVisualizer
         }
     }
     
-    public function drawNode($cores, $id, $class = "", $text = "", $break = false)
+    public function drawNode($cores, $id, $fullyutilized = false, $class = "", $text = "", $break = false)
     {
         if ($break) 
         {
@@ -243,13 +243,14 @@ class CVisualizer
         }
         
         
-        $class = ($allDevil == true) ? "contention" : "";
+        $dclass = ($allDevil == true) ? "contention" : "";
         if ($allDevil)
         {
             $this->numContendedNodes++;
         }
         
         //print_r($proccessesInThisNode);
+        $commBuddies = 0;
         foreach ($proccessesInThisNode as $p1)
         {
             foreach ($proccessesInThisNode as  $p2)
@@ -257,12 +258,18 @@ class CVisualizer
                 if ($p1 == $p2) continue;
                 if ($this->mC_NS[$p1][$p2] == 1) 
                 {
-                    $this->numCoScheduledBuddies++;
+                    $commBuddies++;
                 }
             }
         }
+        $this->numCoScheduledBuddies += $commBuddies;
+        
+        $cclass = ($commBuddies == (($this->coresPerNode * ($this->coresPerNode - 1)) / 2) ) ? "green" : "";
+        $pclass = ($fullyutilized) ? "green" : "";
         echo '<br clear="all" style="clear: all;" />';
-        echo '<div class="shared-resource '.$class.'"></div>';
+        echo '<div class="shared-resource '.$dclass.'">S</div>';
+        echo '<div class="comm-buddies '.$cclass.'">C</div>';
+        echo '<div class="power-util '.$pclass.'">P</div>';
         echo '</div>';
         
     }
@@ -306,7 +313,7 @@ class CVisualizer
             {
                 $this->numFullUtilizedNodes++;
             }
-            $this->drawNode($cores, "node-$i", "", "", ($i > 0) && ($i % $break_size == 0));
+            $this->drawNode($cores, "node-$i", ($powerOnCores == $this->coresPerNode) ,"", "", ($i > 0) && ($i % $break_size == 0));
             
         }
         

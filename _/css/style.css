@@ -183,10 +183,43 @@ div.shared-resource {
     height: 20px;
     margin: 1px;
     background-color: lightgray;
+    width: 28%;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    color: gray;
+}
+
+div.comm-buddies {
+    border: 1px solid gray;
+    height: 20px;
+    margin: 1px;
+    background-color: lightgray;
+    width: 28%;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    color: gray;
+}
+
+div.power-util {
+    border: 1px solid gray;
+    height: 20px;
+    margin: 1px;
+    background-color: lightgray;
+    width: 28%;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+    color: gray;
 }
 
 div.contention {
     background-color: #C64147;
+}
+
+div.green {
+    background-color: green;
 }
 
 .connection{
