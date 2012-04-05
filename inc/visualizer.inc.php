@@ -21,6 +21,12 @@ class CVisualizer
     private $pon;
     private $ppr;
     
+    // Statistics
+    private $numContendedNodes;
+    private $numCoScheduledBuddies;
+    private $numPoweredOnNodes;
+    private $numFullUtilizedNodes;
+    
     function init($numnodes, $corespernode, $namesfile, $devilfile, $commfile, $solfile, $paramfile = "") {
         $this->errorList = array();
         $this->idMap = array();
@@ -199,6 +205,7 @@ class CVisualizer
         }
         $i = 0;
         
+        $proccessesInThisNode = array();
         $allDevil = true;
         foreach ($cores as $core)
         {
@@ -212,7 +219,8 @@ class CVisualizer
             
             $class = "";
             if ($isOccupied)
-            {
+            {                
+                $proccessesInThisNode[] = $index;
                 $class .= " occupied-core";
                 if ($isDevil) 
                 {
@@ -227,12 +235,32 @@ class CVisualizer
                 $class .= " empty-core";
             }
             
+            
             echo '<div id="'.$id.'-c'.$i.'" class="core '.$class.'">';
             echo ($isOccupied) ? $pName : "";
             echo '</div>';
             $i++;
         }
+        
+        
         $class = ($allDevil == true) ? "contention" : "";
+        if ($allDevil)
+        {
+            $this->numContendedNodes++;
+        }
+        
+        //print_r($proccessesInThisNode);
+        foreach ($proccessesInThisNode as $p1)
+        {
+            foreach ($proccessesInThisNode as  $p2)
+            {
+                if ($p1 == $p2) continue;
+                if ($this->mC_NS[$p1][$p2] == 1) 
+                {
+                    $this->numCoScheduledBuddies++;
+                }
+            }
+        }
         echo '<br clear="all" style="clear: all;" />';
         echo '<div class="shared-resource '.$class.'"></div>';
         echo '</div>';
@@ -241,11 +269,16 @@ class CVisualizer
  
     public function visualize()
     {
+        $this->numContendedNodes = 0;
+        $this->numCoScheduledBuddies = 0;
+        $this->numPoweredOnNodes = 0;
+        $this->numFullUtilizedNodes = 0;
         $this->idMap = array();
         $break_size = floor(sqrt($this->numNodes));
         for ($i = 0; $i < $this->numNodes; $i++)
         {
             $cores = array();
+            $powerOnCores = 0;
             for ($j = 0; $j < $this->coresPerNode; $j++)
             {
                 $index = ($i * $this->coresPerNode) + $j;    
@@ -257,6 +290,7 @@ class CVisualizer
                 }
                 else
                 {
+                    $powerOnCores++;
                     $cores[$j]["isOccupied"] = true;
                     $cores[$j]["isDevil"] = $this->mD[$process_id][1];
                     $cores[$j]["pName"] = $this->processNames[$process_id][1];
@@ -264,9 +298,19 @@ class CVisualizer
                 }
                 
             } 
+            if ($powerOnCores > 0)
+            {
+                $this->numPoweredOnNodes++;
+            }
+            if ($powerOnCores == $this->coresPerNode)
+            {
+                $this->numFullUtilizedNodes++;
+            }
             $this->drawNode($cores, "node-$i", "", "", ($i > 0) && ($i % $break_size == 0));
             
         }
+        
+        echo "<h2>Contented: $this->numContendedNodes, CoScheduled: $this->numCoScheduledBuddies, On: $this->numPoweredOnNodes, Fully Utilized: $this->numFullUtilizedNodes</h2>";
     }
     
     public function generateJSONForConnections($sym = true)
@@ -290,7 +334,6 @@ class CVisualizer
         return $js;
     }
     
-    //$("#node-0-c0").hover(function () { $("#"+this.id+",#node-3-c1,#node-0-c1").hilight() }, function () {$("#"+this.id+",#node-3-c1,#node-0-c1").lolight() } );
     public function generateJQueryForHighlights($sym = true)
     {
         $js = "";
@@ -315,7 +358,6 @@ class CVisualizer
     }
         
     
-    public function getNumberOf
     
 }
 ?>
