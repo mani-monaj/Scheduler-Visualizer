@@ -1,5 +1,4 @@
 <?php
-
 class CVisualizer
 {
     private $numNodes;
@@ -16,7 +15,13 @@ class CVisualizer
     private $errorList;
     private $idMap;
     
-    function init($numnodes, $corespernode, $namesfile, $devilfile, $commfile, $solfile) {
+    private $wc;
+    private $wp;
+    private $wd;      
+    private $pon;
+    private $ppr;
+    
+    function init($numnodes, $corespernode, $namesfile, $devilfile, $commfile, $solfile, $paramfile = "") {
         $this->errorList = array();
         $this->idMap = array();
         
@@ -106,9 +111,26 @@ class CVisualizer
             $this->logError("Error: Solution matrix size should be ($this->numCores, $this->numProcesses), but it is ($row, $col).");
             return false;
         }
-
+    
+        if (!empty($paramfile)) {
+            $dummy = array();
+            list($row, $col) = $this->readMatrixFromFile($dummy, $paramfile, "\n", " ");
+            if (($row != 1) || ($col != 5))
+            {
+                $this->logError("Error: param matrix size should be (1, 5), but it is ($row, $col).");
+                return false;
+            }
+            
+            $this->wc = $dummy[0][0];
+            $this->wp = $dummy[0][1];
+            $this->wd = $dummy[0][2];
+            $this->pon = $dummy[0][3];
+            $this->ppr = $dummy[0][4];
+        }
         return true;
     }
+    
+    
     
     private function logError($str)
     {
@@ -196,15 +218,7 @@ class CVisualizer
                 {
                     $class .= " devil";
                 }
-                
-//                $id = $core["id"];
-//                $buddies = array_search($this->mC, "1");
-//                if (!empty($buddies))
-//                {
-//                    $buddies_str = implode(",", $buddies);
-//                    $text = 
-//                }
-                
+
                 $this->idMap[$index] = $id.'-c'.$i;
 
             }
@@ -300,6 +314,8 @@ class CVisualizer
         return $js;
     }
         
+    
+    public function getNumberOf
     
 }
 ?>
