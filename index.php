@@ -38,6 +38,15 @@
         ?>
 		<br clear="all" style="clear: both" />
 
+        
+        <div id="control">
+            <input id="togglec" type="button" value="Toggle Connections" />
+        </div>
+        <pre id="debug">
+        <?php
+        //echo nl2br($viz->generateJSFromCommunication());
+        ?>
+        </pre>
         <!--
         <div id="node0" style="position: absolute; block; width:100px; height:100px; border:1px solid red; left:10px; top:100px">Box 0</div>
         <div id="node1" style="position: absolute; width:100px; height:100px; border:1px solid red; left:300px; top:400px">Box 1</div>

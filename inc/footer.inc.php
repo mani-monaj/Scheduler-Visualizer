@@ -8,7 +8,7 @@
 <script type="text/javascript">
     (function($){})(window.jQuery);
     jsPlumb.bind("ready", function() {  
-        //return;
+        return;
         <?php echo $viz->generateJSONForConnections(false); ?> 
         for (var row in conn)
         {
@@ -40,7 +40,8 @@
                     target: buddy, 
                     //anchor: ["BottomCenter", "TopCenter"],
                     anchor: "AutoDefault",
-                    endpoint:[ "Dot", { cssClass:"myEndpoint", radius: 2 } ],
+                    //endpoint:[ "Dot", { cssClass:"myEndpoint", radius: 2 } ],
+                    endpoint: "Blank",
                     //connector: [ "StateMachine", 50],     
                     connector: [ "Flowchart", 10],     
                     //endpointStyle: { fillStyle: color },
@@ -58,20 +59,51 @@
     
     $(document).ready(function (){
        
-       //$(".core").css({ opacity: 0.75});       
+       //$(".core").css({ opacity: 0.75});  
+       
+       $("#togglec").click(function () {
+           //$("._jsPlumb_endpoint").toggle();
+           $("._jsPlumb_connector").toggle();
+           //jsPlumb.toggle("*");
+       });
        
        
-       $.fn.hilight = function() {
+       $.fn.hilight = function(source) {      
+           $(source).css("border-color", "red");
+           $(source).effect("highlight", {}, 1000);
             return $(this).each(function() {
-                $(this).css("border-color", "red")
-                //$(this).effect("highlight", {}, 1000);
+                var sinkId = $(this).attr("id");                
+                $(this).css("border-color", "red");
+                $(this).effect("highlight", {}, 1000);
+
+                var sourceId = $(source).attr("id");
+                //$("pre#debug").append(sourceId);
+                jsPlumb.connect({ 
+                    source: sourceId, 
+                    anchor: "AutoDefault",
+                    target: sinkId, 
+                    anchor: "AutoDefault",
+                    endpoint: "Blank",
+                    connector: [ "StateMachine", 50],     
+                    //connector: [ "Flowchart", 10],     
+                    //connector: ["Bezier", 100],
+                    //endpointStyle: { fillStyle: "lightgray" },
+                    //paintStyle: { strokeStyle: color, lineWidth:4 }
+                    paintStyle: { strokeStyle: "black", lineWidth:4 }
+                });
+
+
+                //jsPlumb.select({source:$(this).attr('id')}).hide();                
             });
         };
         
-        $.fn.lolight = function() {
+        $.fn.lolight = function(source) {
+            var col = $(source).css("background-color");
+            $(source).css("border-color", col);
             return $(this).each(function() {
                 var col = $(this).css("background-color");
-                $(this).css("border-color", col)
+                $(this).css("border-color", col);
+                jsPlumb.reset();
             });
         };
         
@@ -83,10 +115,6 @@
     
 </script>
 <script src="_/js/functions.js"></script>
-<pre id="debug">
-<?php
-//echo nl2br($viz->generateJSFromCommunication());
-?>
-</pre>
+
 </body>
 </html>

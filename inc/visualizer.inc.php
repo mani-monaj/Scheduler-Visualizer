@@ -286,16 +286,16 @@ class CVisualizer
             $buddies = array_keys( $sym ? $this->mC[$index] : $this->mC_NS[$index], 1);
             if (empty($buddies)) continue;
             $buddies_htmlids = array();
-            $buddies_htmlids[] = $htmlid;
+            //$buddies_htmlids[] = $htmlid;
             foreach ($buddies as $buddy)
             {
                 $buddies_htmlids[] = $this->idMap[$buddy];
             }
             $buddies_str = "#".implode(",#", $buddies_htmlids);
             $js .= sprintf("\t$('#%s').hover(
-                function () { $('%s').hilight() }, 
-                function () { $('%s').lolight() } );\n", 
-                $htmlid, $buddies_str, $buddies_str);
+                function () { $('%s').hilight('#%s') }, 
+                function () { $('%s').lolight('#%s') } );\n", 
+                $htmlid, $buddies_str, $htmlid, $buddies_str, $htmlid);
         }
         return $js;
     }
