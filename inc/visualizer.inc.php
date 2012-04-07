@@ -22,6 +22,7 @@ class CVisualizer
     private $ppr;
     
     // Statistics
+    private $nodesData;
     private $numContendedNodes;
     private $numCoScheduledBuddies;
     private $numPoweredOnNodes;
@@ -136,10 +137,99 @@ class CVisualizer
             //$this->pon = $dummy[0][3];
             //$this->ppr = $dummy[0][4];
         }
+        $this->analyse();
         return true;
     }
     
+    private function analyseNode()
+    {
+        $this->nodesData = array();
+        
+    }
     
+    private function analyse()
+    {
+        $this->numContendedNodes = 0;
+        $this->numCoScheduledBuddies = 0;
+        $this->numPoweredOnNodes = 0;
+        $this->numFullUtilizedNodes = 0;
+        $this->nodesData = array();
+        for ($i = 0; $i < $this->numNodes; $i++)
+        {
+            $powerOnCores = 0;
+            $numDevils = 0;
+            $this->nodesData[$i]["processes"] = array();
+            $this->nodesData[$i]["cores"] = array();
+            for ($j = 0; $j < $this->coresPerNode; $j++)
+            {
+                $index = ($i * $this->coresPerNode) + $j;    
+                
+                $process_id = array_search(1, $this->mX[$index]);
+                if ($process_id === FALSE)
+                {
+                    $this->nodesData[$i]["cores"][$j]["isOccupied"] = false;                    
+                }
+                else
+                {
+                    $powerOnCores++;
+                    if ($this->mD[$process_id][1])
+                    {
+                        $numDevils++;
+                    }
+                    $this->nodesData[$i]["cores"][$j]["isOccupied"] = true;
+                    $this->nodesData[$i]["cores"][$j]["isDevil"] = $this->mD[$process_id][1];
+                    $this->nodesData[$i]["cores"][$j]["pName"] = $this->processNames[$process_id][1];
+                    $this->nodesData[$i]["cores"][$j]["index"] = $process_id;
+                    $this->nodesData[$i]["processes"][] = $process_id;
+                }
+                
+            } 
+            
+            $this->nodesData[$i]["numOnCores"] = $powerOnCores;
+            $this->nodesData[$i]["numDevils"] = $numDevils;
+            $this->nodesData[$i]["isContended"] = false;
+            
+            if ($this->nodesData[$i]["numDevils"] == $this->coresPerNode)
+            {
+                $this->nodesData[$i]["isContended"] = true;
+                $this->numContendedNodes++;
+            }
+            
+            $this->nodesData[$i]["isFullyUtilized"] = false;
+            if ($this->nodesData[$i]["numOnCores"] == $this->coresPerNode)
+            {
+                $this->nodesData[$i]["isFullyUtilized"] = true;
+                $this->numFullUtilizedNodes++;
+            }
+            
+            $commBuddies = 0;
+            foreach ($this->nodesData[$i]["processes"] as $p1)
+            {
+                foreach ($this->nodesData[$i]["processes"] as  $p2)
+                {
+                    if ($p1 == $p2) continue;
+                    if ($this->mC_NS[$p1][$p2] == 1) 
+                    {
+                        $commBuddies++;
+                    }
+                }
+            }
+            
+            $this->nodesData[$i]["commBuddies"] = $commBuddies;
+            $this->nodesData[$i]["isCoscheduled"] = false;
+            if ($this->nodesData[$i]["commBuddies"] == (($this->coresPerNode * ($this->coresPerNode - 1)) / 2))
+            {
+                $this->nodesData[$i]["isCoscheduled"] = true;
+                $this->numCoScheduledBuddies++;
+            }
+            if ($powerOnCores > 0)
+            {
+                $this->numPoweredOnNodes++;
+            }
+       
+            
+        }
+    }
     
     private function logError($str)
     {
@@ -204,14 +294,14 @@ class CVisualizer
         }
     }
     
-    public function drawNode($cores, $id, $poweredOnCores = false, $class = "", $text = "", $break = false)
+    public function drawNode($ni, $id, $class = "", $text = "", $break = false)
     {
         if ($break) 
         {
             echo '<br clear="all" style="clear: all;" />';
         }
 
-        if ($poweredOnCores == 0) $class .= " offnode";
+        if ($this->nodesData[$ni]["numOnCores"] == 0) $class .= " offnode";
         echo '<div id="'.$id.'" class="node '.$class.'" >';
         
         if (!empty($text)) 
@@ -220,30 +310,22 @@ class CVisualizer
         }
         $i = 0;
         
-        $proccessesInThisNode = array();
-        $allDevil = true;
-        foreach ($cores as $core)
+        foreach ($this->nodesData[$ni]["cores"] as $core)
         {
-            $isDevil = false;
             foreach($core as $key=>$val)
             {
                 $$key = $val;
             }
-                        
-            $allDevil = $allDevil & $isDevil;
-            
+                                    
             $class = "";
             if ($isOccupied)
             {                
-                $proccessesInThisNode[] = $index;
                 $class .= " occupied-core";
                 if ($isDevil) 
                 {
                     $class .= " devil";
                 }
-
                 $this->idMap[$index] = $id.'-c'.$i;
-
             }
             else
             {
@@ -258,29 +340,11 @@ class CVisualizer
         }
         
         
-        $dclass = ($allDevil == true) ? "contention" : "";
-        if ($allDevil)
-        {
-            $this->numContendedNodes++;
-        }
+        $dclass = ($this->nodesData[$ni]["isContended"]) ? "contention" : "";
         
-        //print_r($proccessesInThisNode);
-        $commBuddies = 0;
-        foreach ($proccessesInThisNode as $p1)
-        {
-            foreach ($proccessesInThisNode as  $p2)
-            {
-                if ($p1 == $p2) continue;
-                if ($this->mC_NS[$p1][$p2] == 1) 
-                {
-                    $commBuddies++;
-                }
-            }
-        }
-        $this->numCoScheduledBuddies += $commBuddies;
         
-        $cclass = ($commBuddies == (($this->coresPerNode * ($this->coresPerNode - 1)) / 2) ) ? "green" : "";
-        $pclass = ($poweredOnCores == $this->coresPerNode) ? "green" : "";
+        $cclass = ($this->nodesData[$ni]["isCoscheduled"]) ? "green" : "";
+        $pclass = ($this->nodesData[$ni]["isFullyUtilized"]) ? "green" : "";
         echo '<br clear="all" style="clear: all;" />';
         echo '<div class="shared-resource '.$dclass.'"></div>';
         echo '<div class="comm-buddies '.$cclass.'"></div>';
@@ -291,45 +355,12 @@ class CVisualizer
  
     public function visualize()
     {
-        $this->numContendedNodes = 0;
-        $this->numCoScheduledBuddies = 0;
-        $this->numPoweredOnNodes = 0;
-        $this->numFullUtilizedNodes = 0;
+        
         $this->idMap = array();
         $break_size = floor(sqrt($this->numNodes));
         for ($i = 0; $i < $this->numNodes; $i++)
         {
-            $cores = array();
-            $powerOnCores = 0;
-            for ($j = 0; $j < $this->coresPerNode; $j++)
-            {
-                $index = ($i * $this->coresPerNode) + $j;    
-                
-                $process_id = array_search(1, $this->mX[$index]);
-                if ($process_id === FALSE)
-                {
-                    $cores[$j]["isOccupied"] = false;                    
-                }
-                else
-                {
-                    $powerOnCores++;
-                    $cores[$j]["isOccupied"] = true;
-                    $cores[$j]["isDevil"] = $this->mD[$process_id][1];
-                    $cores[$j]["pName"] = $this->processNames[$process_id][1];
-                    $cores[$j]["index"] = $process_id;
-                }
-                
-            } 
-            if ($powerOnCores > 0)
-            {
-                $this->numPoweredOnNodes++;
-            }
-            if ($powerOnCores == $this->coresPerNode)
-            {
-                $this->numFullUtilizedNodes++;
-            }
-            $this->drawNode($cores, "node-$i", $powerOnCores,"", "", ($i > 0) && ($i % $break_size == 0));
-            
+            $this->drawNode($i, "node-$i","", "", ($i > 0) && ($i % $break_size == 0));
         }
         
         echo "<h2>Contented: $this->numContendedNodes, CoScheduled: $this->numCoScheduledBuddies, On: $this->numPoweredOnNodes, Fully Utilized: $this->numFullUtilizedNodes</h2>";
