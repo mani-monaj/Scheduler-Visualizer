@@ -28,6 +28,8 @@ class CVisualizer
     private $numPoweredOnNodes;
     private $numFullUtilizedNodes;
     
+    private $cache;
+    
     function init($numnodes, $corespernode, $namesfile, $devilfile, $commfile, $solfile, $paramfile = "") {
         $this->errorList = array();
         $this->idMap = array();
@@ -138,15 +140,22 @@ class CVisualizer
             //$this->ppr = $dummy[0][4];
         }
         $this->analyse();
+        $this->saveDataToFile("./cache/".substr(md5($solfile),0,7).".cache");
         return true;
     }
-    
-    private function analyseNode()
+       
+    private function saveDataToFile($filename)
     {
-        $this->nodesData = array();
-        
+        $this->cache = $filename;
+        $data = array("cooff" => array($this->wp, $this->wd, $this->wc), "nodes" => $this->nodesData);
+        file_put_contents($filename, serialize($data));
+        echo "Printed Data to '$filename' base64:" . base64_encode($filename);
     }
     
+    public function getCacheFilename()
+    {
+        return $this->cache;
+    }
     private function analyse()
     {
         $this->numContendedNodes = 0;
