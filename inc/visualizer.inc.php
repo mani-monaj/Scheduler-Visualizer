@@ -121,7 +121,7 @@ class CVisualizer
         if (!empty($paramfile)) {
             $dummy = array();
             list($row, $col) = $this->readMatrixFromFile($dummy, $paramfile, "\n", " ");
-            if (($row != 1) || ($col != 5))
+            if (($row != 1) || ($col != 3))
             {
                 $this->logError("Error: param matrix size should be (1, 3), but it is ($row, $col).");
                 return false;
@@ -204,13 +204,14 @@ class CVisualizer
         }
     }
     
-    public function drawNode($cores, $id, $fullyutilized = false, $class = "", $text = "", $break = false)
+    public function drawNode($cores, $id, $poweredOnCores = false, $class = "", $text = "", $break = false)
     {
         if ($break) 
         {
             echo '<br clear="all" style="clear: all;" />';
         }
 
+        if ($poweredOnCores == 0) $class .= " offnode";
         echo '<div id="'.$id.'" class="node '.$class.'" >';
         
         if (!empty($text)) 
@@ -279,11 +280,11 @@ class CVisualizer
         $this->numCoScheduledBuddies += $commBuddies;
         
         $cclass = ($commBuddies == (($this->coresPerNode * ($this->coresPerNode - 1)) / 2) ) ? "green" : "";
-        $pclass = ($fullyutilized) ? "green" : "";
+        $pclass = ($poweredOnCores == $this->coresPerNode) ? "green" : "";
         echo '<br clear="all" style="clear: all;" />';
-        echo '<div class="shared-resource '.$dclass.'">S</div>';
-        echo '<div class="comm-buddies '.$cclass.'">C</div>';
-        echo '<div class="power-util '.$pclass.'">P</div>';
+        echo '<div class="shared-resource '.$dclass.'"></div>';
+        echo '<div class="comm-buddies '.$cclass.'"></div>';
+        echo '<div class="power-util '.$pclass.'"></div>';
         echo '</div>';
         
     }
@@ -327,7 +328,7 @@ class CVisualizer
             {
                 $this->numFullUtilizedNodes++;
             }
-            $this->drawNode($cores, "node-$i", ($powerOnCores == $this->coresPerNode) ,"", "", ($i > 0) && ($i % $break_size == 0));
+            $this->drawNode($cores, "node-$i", $powerOnCores,"", "", ($i > 0) && ($i % $break_size == 0));
             
         }
         

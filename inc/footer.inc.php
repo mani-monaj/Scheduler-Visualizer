@@ -109,6 +109,9 @@
         
         //$(".node").width(50);
         //$(".node").height(50);
+        
+        $(".offnode").css("background-color", "lightgray");
+        $(".offnode").children().css("background-color", "lightgray");
         <?php echo $viz->generateJQueryForHighlights(); ?>
     });
     
