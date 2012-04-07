@@ -14,4 +14,6 @@ he D (Devils) matrix should be a binary (p x 2) matrix. First coloumn is the pro
 
 The N (Names) matrix is the same as D with the difference that the second coloumn is a text. The names should not be wrapped with anything, therefor no space (or any other special charachters) are allowed.
 
+The W (weights) matrix is a (1 x 3) matrix with values for w_p, w_d and w_c in order.
+
 The X (Soloutin) matrix is a binary matrix of size (p x c). X(i,j) == 1 in this matrix means that process #i is scheduled in core #j. i is in [0,p) and j is in [0,c).

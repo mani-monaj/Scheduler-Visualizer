@@ -107,6 +107,8 @@
             });
         };
         
+        //$(".node").width(50);
+        //$(".node").height(50);
         <?php echo $viz->generateJQueryForHighlights(); ?>
     });
     

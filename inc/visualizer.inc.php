@@ -123,15 +123,18 @@ class CVisualizer
             list($row, $col) = $this->readMatrixFromFile($dummy, $paramfile, "\n", " ");
             if (($row != 1) || ($col != 5))
             {
-                $this->logError("Error: param matrix size should be (1, 5), but it is ($row, $col).");
+                $this->logError("Error: param matrix size should be (1, 3), but it is ($row, $col).");
                 return false;
             }
             
-            $this->wc = $dummy[0][0];
-            $this->wp = $dummy[0][1];
-            $this->wd = $dummy[0][2];
-            $this->pon = $dummy[0][3];
-            $this->ppr = $dummy[0][4];
+            $this->wp = abs($dummy[0][0]);
+            $this->wd = abs($dummy[0][1]);
+            $this->wc = abs($dummy[0][2]);
+            
+            //Arash: obj = wd*devil+wc*commpai+wp*node_on ; wd > 0, wc < 0, wp > 0; Min 
+            //
+            //$this->pon = $dummy[0][3];
+            //$this->ppr = $dummy[0][4];
         }
         return true;
     }
@@ -146,6 +149,17 @@ class CVisualizer
     public function getError()
     {
         return implode("<br />", $this->errorList);
+    }
+    
+    public function getObjectiveFunctionValue() 
+    {
+        //Arash: obj = wd*devilpairs+wc*commpairs+wp*node_on ; wd > 0, wc < 0, wp > 0; Min 
+        //Jessica: obj = wd*devilpairs+wc*commpairs+wp*node_off ; wd < 0, wc > 0, wp > 0; Max
+        
+        $arash = ($this->wd * $this->numContendedNodes) + (-$this->wc & $this->numCoScheduledBuddies) + ($this->wp * $this->numPoweredOnNodes);
+        $jess  = 10.0 * (-$this->wd * $this->numContendedNodes) + ($this->wc & $this->numCoScheduledBuddies) + ($this->wp * ($this->numNodes - $this->numPoweredOnNodes));
+        
+        return array("arash" => $arash, "jess" => $jess);
     }
     /**
      * Reads CSV and imports it to a matrix
@@ -318,6 +332,7 @@ class CVisualizer
         }
         
         echo "<h2>Contented: $this->numContendedNodes, CoScheduled: $this->numCoScheduledBuddies, On: $this->numPoweredOnNodes, Fully Utilized: $this->numFullUtilizedNodes</h2>";
+        print_r($this->getObjectiveFunctionValue());
     }
     
     public function generateJSONForConnections($sym = true)
