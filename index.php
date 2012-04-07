@@ -58,8 +58,33 @@
             print_r($viz->getObjectiveFunctionValue());
             echo '<div id="fingerprint-wrapper">';
             echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=random&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
-            echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=order&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
+            //echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=order&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
             echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=specterum&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
+            
+            $stat = $viz->getStats();
+            foreach ($stat as $key=>$val)
+            {
+                $$key = $val;
+            }
+            
+            $d = $numContendedNodes / $numNodes;
+            $c = $numCoScheduledBuddies / $numNodes;
+            $o = $numPoweredOnNodes / $numNodes;
+            
+            $sumw = $wd + $wp + $wc;
+            $wd /= $sumw;
+            $wp /= $sumw;
+            $wc /= $sumw;
+            
+            $obj = (($wd * $d) - ($wc * $c) + ($wp * $o));
+            
+            $min = -$wc * (($coresPerNode * ($coresPerNode - 1)) / 2);
+            $max = ($wd * $coresPerNode) + ((1.0) * $coresPerNode * $wp);
+            
+            $obj = 1.0 - ($obj / ($max - $min));
+            
+            $img = "http://chart.apis.google.com/chart?chxl=0:|D|C|P|O&chxr=1,0,1&chxt=x,y&chs=200x200&cht=rs&chco=FF0000&chds=0,1&chd=t:$d,$c,$o,$obj,$d&chls=2&chm=B,FF000080,0,0,0";
+            echo '<img class="fingerprint-chart" src="'.$img.'" alt="" border="0"/>';
             echo '</div>';
         ?>
 	</aside>

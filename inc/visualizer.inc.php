@@ -160,8 +160,12 @@ class CVisualizer
     public function getStats()
     {
         return array(
+            "wp" => $this->wp,
+            "wd" => $this->wd,
+            "wc" => $this->wc,
             "numNodes" => $this->numNodes,
             "numCores" => $this->numCores,
+            "coresPerNode" => $this->coresPerNode,
             "numContendedNodes" => $this->numContendedNodes,
             "numPoweredOnNodes" => $this->numPoweredOnNodes,
             "numCoScheduledBuddies" => $this->numCoScheduledBuddies,
