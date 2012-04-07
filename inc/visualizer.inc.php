@@ -149,13 +149,26 @@ class CVisualizer
         $this->cache = $filename;
         $data = array("cooff" => array($this->wp, $this->wd, $this->wc), "nodes" => $this->nodesData);
         file_put_contents($filename, serialize($data));
-        echo "Printed Data to '$filename' base64:" . base64_encode($filename);
+        //echo "Printed Data to '$filename' base64:" . base64_encode($filename);
     }
     
     public function getCacheFilename()
     {
         return $this->cache;
     }
+    
+    public function getStats()
+    {
+        return array(
+            "numNodes" => $this->numNodes,
+            "numCores" => $this->numCores,
+            "numContendedNodes" => $this->numContendedNodes,
+            "numPoweredOnNodes" => $this->numPoweredOnNodes,
+            "numCoScheduledBuddies" => $this->numCoScheduledBuddies,
+            "numFullUtilizedNodes" => $this->numFullUtilizedNodes
+            );
+    }
+    
     private function analyse()
     {
         $this->numContendedNodes = 0;
@@ -354,7 +367,7 @@ class CVisualizer
         
         $cclass = ($this->nodesData[$ni]["isCoscheduled"]) ? "green" : "";
         $pclass = ($this->nodesData[$ni]["isFullyUtilized"]) ? "green" : "";
-        echo '<br clear="all" style="clear: all;" />';
+        echo '<br clear="all" style="clear: both;" />';
         echo '<div class="shared-resource '.$dclass.'"></div>';
         echo '<div class="comm-buddies '.$cclass.'"></div>';
         echo '<div class="power-util '.$pclass.'"></div>';
@@ -372,8 +385,8 @@ class CVisualizer
             $this->drawNode($i, "node-$i","", "", ($i > 0) && ($i % $break_size == 0));
         }
         
-        echo "<h2>Contented: $this->numContendedNodes, CoScheduled: $this->numCoScheduledBuddies, On: $this->numPoweredOnNodes, Fully Utilized: $this->numFullUtilizedNodes</h2>";
-        print_r($this->getObjectiveFunctionValue());
+        //echo "<h2>Contented: $this->numContendedNodes, CoScheduled: $this->numCoScheduledBuddies, On: $this->numPoweredOnNodes, Fully Utilized: $this->numFullUtilizedNodes</h2>";
+        //print_r($this->getObjectiveFunctionValue());
     }
     
     public function generateJSONForConnections($sym = true)

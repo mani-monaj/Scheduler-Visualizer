@@ -14,7 +14,7 @@
 		</nav>
         -->
 	</header>
-	
+	<br clear="all" style="clear: both" />
 	<article>
 		<?php
             require_once("./inc/visualizer.inc.php");
@@ -29,6 +29,7 @@
             else
             {
                 $viz->visualize();
+                
                 //print_r($viz->generateJSFromCommunication());
             }
             
@@ -38,17 +39,8 @@
             //$viz->drawNode($cores, "core-1");
             //$viz->drawNode($cores, "core-2");
         ?>
-		<br clear="all" style="clear: both" />
 
-        
-        <div id="control">
-            <input id="togglec" type="button" value="Toggle Connections" />
-        </div>
-        <pre id="debug">
-        <?php
-        //echo nl2br($viz->generateJSFromCommunication());
-        ?>
-        </pre>
+                
         <!--
         <div id="node0" style="position: absolute; block; width:100px; height:100px; border:1px solid red; left:10px; top:100px">Box 0</div>
         <div id="node1" style="position: absolute; width:100px; height:100px; border:1px solid red; left:300px; top:400px">Box 1</div>
@@ -57,14 +49,29 @@
 	
 	<aside>
 	
-		<h2>Sidebar comes here</h2>
-	
+		<div id="control">
+            <input id="togglec" type="button" value="Toggle Connections" />
+        </div>
+        
+        <?php
+            print_r($viz->getStats());
+            print_r($viz->getObjectiveFunctionValue());
+            echo '<div id="fingerprint-wrapper">';
+            echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=random&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
+            echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=order&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
+            echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=specterum&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
+            echo '</div>';
+        ?>
 	</aside>
-	
+	<br clear="all" style="clear: both" />
 	<footer>
 		
 		<p><small>Footer Comes Here</small></p>
-		
+		<pre id="debug">
+        <?php
+        //echo nl2br($viz->generateJSFromCommunication());
+        ?>
+        </pre>
 	</footer>
 
 </div>

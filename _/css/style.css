@@ -149,6 +149,23 @@ mark {background-color: #fcd700; color: #000; font-style: italic; font-weight: b
 body {
     background-color: #FFEFA6;
 }
+
+.wrapper {
+    width: 1000px;
+    padding:0;
+}
+
+article {
+    float: left;
+    width: 700px;
+    margin: 0;
+}
+
+aside {
+    width: 290px;
+    float: left;
+    margin: 0;
+}
 div.node {
     border: 1px solid black;
     float: left;
