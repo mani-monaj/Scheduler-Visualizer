@@ -70,9 +70,9 @@
                         target: buddy, 
                         anchor: "AutoDefault",
                         endpoint: "Blank",
-                        connector: [ "StateMachine", 50],     
-                        //connector: [ "Flowchart", 10],
-                        paintStyle: { strokeStyle: "orange", lineWidth:4 }
+                        //connector: [ "StateMachine", 50],     
+                        connector: [ "Flowchart", 10],
+                        paintStyle: { strokeStyle: "black", lineWidth:4 }
                     });
                 }
             }
@@ -86,11 +86,11 @@
        
        $.fn.hilight = function(source) {      
            $(source).css("border-color", "red");
-           $(source).stop(true, true).effect("highlight", {}, 1000);
+           $(source).stop(true, true, true).effect("highlight", {}, 1000);
             return $(this).each(function() {
                 var sinkId = $(this).attr("id");                
                 $(this).css("border-color", "red");
-                $(this).stop(true, true).effect("highlight", {}, 1000);
+                $(this).stop(true, true, true).effect("highlight", {}, 1000);
 
                 var sourceId = $(source).attr("id");
                 //$("pre#debug").append(sourceId);
@@ -101,10 +101,7 @@
                     anchor: "AutoDefault",
                     endpoint: "Blank",
                     connector: [ "StateMachine", 50],     
-                    //connector: [ "Flowchart", 10],     
-                    //connector: ["Bezier", 100],
-                    //endpointStyle: { fillStyle: "lightgray" },
-                    //paintStyle: { strokeStyle: color, lineWidth:4 }
+                    //connector: [ "Flowchart", 10],                  
                     paintStyle: { strokeStyle: "black", lineWidth:4 }
                 });
 
@@ -114,10 +111,10 @@
         };
         
         $.fn.lolight = function(source) {
-            var col = $(source).css("background-color");
+            var col = $(source).stop(true, true, true).css("background-color");
             $(source).css("border-color", col);
             return $(this).each(function() {
-                var col = $(this).css("background-color");
+                var col = $(this).stop(true, true, true).css("background-color");
                 $(this).css("border-color", col);
                 jsPlumb.reset();
             });
