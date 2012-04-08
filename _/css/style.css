@@ -183,6 +183,7 @@ div.core {
     margin: 1px;
     text-align: center;
     border-radius: 5px;
+    vertical-align: middle;
 }
 
 /*
@@ -198,44 +199,33 @@ div.occupied-core {
 div.devil {
     background-color: #FD787E;
 }
-div.shared-resource {
-    border: 1px solid gray;
+
+.bar {
     margin: 1px;
-    background-color: lightgray;
     width: 95%;
-    height: 5px;
+    height: 1px;
     float: left;
     text-align: center;
     vertical-align: middle;
-    color: gray;
     border-radius: 2px;
-    clear: right;
+}
+
+div.shared-resource {
+    border: 1px solid gray;
+    background-color: lightgray;
+    color: gray;
 }
 
 div.comm-buddies {
     border: 1px solid gray;
-    margin: 1px;
     background-color: lightgray;
-    width: 95%;
-    height: 5px;
-    float: left;
-    text-align: center;
-    vertical-align: middle;
     color: gray;
-    clear: right;
 }
 
 div.power-util {
     border: 1px solid gray;
-    margin: 1px;
     background-color: lightgray;
-    width: 95%;
-    height: 5px;
-    float: left;
-    text-align: center;
-    vertical-align: middle;
     color: gray;
-    clear: right;
 }
 
 div.contention {

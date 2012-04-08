@@ -15,42 +15,27 @@
             var node = conn[row];
             var sourceStr = node['htmlid'];
             var buddiesStr = node['buddies_htmlids'];
-            //document.writeln(buddiesStr);
             
-            $("pre#debug").append('Source : ' + sourceStr);
-            $("pre#debug").append('| Buddies : ' + buddiesStr + '<br />');
+            //$("pre#debug").append('Source : ' + sourceStr);
+            //$("pre#debug").append('| Buddies : ' + buddiesStr + '<br />');
             if (buddiesStr.length == 0) continue;
             var buddies = buddiesStr.split(",");
             
-            //document.write('Source:'+source);
-            /*
-            
-                */
             for (var col in buddies)
             {            
                 var buddy = buddies[col];
-                //document.write('Buddy :'+ buddy);
-                //$("pre#debug").append('Buddy : ' + buddy);
                 var rint = Math.round(0xffffff * Math.random());
                 var color = ('#0' + rint.toString(16)).replace(/^#0([0-9a-f]{6})$/i, '#$1');
                 jsPlumb.connect({ 
                     source: sourceStr, 
-                    //anchor: ["BottomCenter", "TopCenter"],
                     anchor: "AutoDefault",
                     target: buddy, 
-                    //anchor: ["BottomCenter", "TopCenter"],
                     anchor: "AutoDefault",
-                    //endpoint:[ "Dot", { cssClass:"myEndpoint", radius: 2 } ],
                     endpoint: "Blank",
-                    //connector: [ "StateMachine", 50],     
-                    connector: [ "Flowchart", 10],     
-                    //endpointStyle: { fillStyle: color },
-                    endpointStyle: { fillStyle: "lightgray" },
-                    //paintStyle: { strokeStyle: color, lineWidth:4 }
-                    paintStyle: { strokeStyle: "lightgray", lineWidth:4 }
+                    connector: [ "StateMachine", 50],     
+                    paintStyle: { strokeStyle: "gray", lineWidth:4 }
                 });
             }
-            //$("pre#debug").append('<br />');
         }
     });
       
@@ -61,20 +46,51 @@
        
        //$(".core").css({ opacity: 0.75});  
        
-       $("#togglec").click(function () {
-           //$("._jsPlumb_endpoint").toggle();
-           $("._jsPlumb_connector").toggle();
-           //jsPlumb.toggle("*");
-       });
+       $("#togglec").hover(function () {
+          <?php echo $viz->generateJSONForConnections(false); ?> 
+            for (var row in conn)
+            {
+                var node = conn[row];
+                var sourceStr = node['htmlid'];
+                var buddiesStr = node['buddies_htmlids'];
+
+                //$("pre#debug").append('Source : ' + sourceStr);
+                //$("pre#debug").append('| Buddies : ' + buddiesStr + '<br />');
+                if (buddiesStr.length == 0) continue;
+                var buddies = buddiesStr.split(",");
+
+                for (var col in buddies)
+                {            
+                    var buddy = buddies[col];
+                    var rint = Math.round(0xffffff * Math.random());
+                    var color = ('#0' + rint.toString(16)).replace(/^#0([0-9a-f]{6})$/i, '#$1');
+                    jsPlumb.connect({ 
+                        source: sourceStr, 
+                        anchor: "AutoDefault",
+                        target: buddy, 
+                        anchor: "AutoDefault",
+                        endpoint: "Blank",
+                        connector: [ "StateMachine", 50],     
+                        //connector: [ "Flowchart", 10],
+                        paintStyle: { strokeStyle: "orange", lineWidth:4 }
+                    });
+                }
+            }
+       },
+       function ()
+       {
+           jsPlumb.reset();
+       }
+       );
        
        
        $.fn.hilight = function(source) {      
            $(source).css("border-color", "red");
-           $(source).effect("highlight", {}, 1000);
+           $(source).stop(true, true).effect("highlight", {}, 1000);
             return $(this).each(function() {
                 var sinkId = $(this).attr("id");                
                 $(this).css("border-color", "red");
-                $(this).effect("highlight", {}, 1000);
+                $(this).stop(true, true).effect("highlight", {}, 1000);
 
                 var sourceId = $(source).attr("id");
                 //$("pre#debug").append(sourceId);

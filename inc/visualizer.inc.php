@@ -383,9 +383,11 @@ class CVisualizer
         $cclass = ($this->nodesData[$ni]["isCoscheduled"]) ? "green" : "";
         $pclass = ($this->nodesData[$ni]["isFullyUtilized"]) ? "green" : "";
         echo '<br clear="all" style="clear: both;" />';
-        echo '<div class="shared-resource '.$dclass.'"></div>';
-        echo '<div class="comm-buddies '.$cclass.'"></div>';
-        echo '<div class="power-util '.$pclass.'"></div>';
+        echo '<div class="bar shared-resource '.$dclass.'"></div>';
+        echo '<br clear="all" style="clear: both;" />';
+        echo '<div class="bar comm-buddies '.$cclass.'"></div>';
+        echo '<br clear="all" style="clear: both;" />';
+        echo '<div class="bar power-util '.$pclass.'"></div>';
         echo '</div>';
         
     }
@@ -427,7 +429,14 @@ class CVisualizer
     
     public function generateJQueryForHighlights($sym = true)
     {
+        $base = sqrt($this->numNodes) * $this->coresPerNode;
+        
+        $coreSize = round(700 - ($base * 12)) / ($base);
         $js = "";
+        $js .= "$('.core').width($coreSize);";
+        $js .= "$('.core').height(".($coreSize / 2.0).");";
+        $js .= "$('.bar').width(".($coreSize * 2.0 + $this->coresPerNode * 2.0).");";
+        $js .= "$('.bar').height(".($coreSize / 6.0).");";
         for ($index = 0; $index < $this->numProcesses; $index++)
         {
             $htmlid = $this->idMap[$index];            
