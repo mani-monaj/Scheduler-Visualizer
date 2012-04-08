@@ -283,8 +283,8 @@ class CVisualizer
         //Arash: obj = wd*devilpairs+wc*commpairs+wp*node_on ; wd > 0, wc < 0, wp > 0; Min 
         //Jessica: obj = wd*devilpairs+wc*commpairs+wp*node_off ; wd < 0, wc > 0, wp > 0; Max
         
-        $arash = ($this->wd * $this->numContendedNodes) + (-$this->wc & $this->numCoScheduledBuddies) + ($this->wp * $this->numPoweredOnNodes);
-        $jess  = 10.0 * (-$this->wd * $this->numContendedNodes) + ($this->wc & $this->numCoScheduledBuddies) + ($this->wp * ($this->numNodes - $this->numPoweredOnNodes));
+        $arash = ($this->wd * $this->numContendedNodes) + (-$this->wc * $this->numCoScheduledBuddies) + ($this->wp * $this->numPoweredOnNodes);
+        $jess  = 10.0 * ((-$this->wd * $this->numContendedNodes) + ($this->wc * $this->numCoScheduledBuddies) + ($this->wp * ($this->numNodes - $this->numPoweredOnNodes)));
         
         return array("arash" => $arash, "jess" => $jess);
     }
