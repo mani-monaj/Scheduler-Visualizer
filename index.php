@@ -19,10 +19,19 @@
 		<?php
             require_once("./inc/visualizer.inc.php");
             
+            $set = $_GET['set'];            
+            if (empty($set)) die("Can not run without solution set!");
+            
+            $_n = (int) $_GET['nodes'];
+            if ($_n == 0) $nodes = 100;
+            
+            $_cpn = (int) $_GET['corespernode'];
+            if ($_cpn == 0) $_cpn = 2;
+            
             $viz = new CVisualizer();
             //if (!$viz->init(4, 2, "./data/dummy-names.csv", "./data/dummy-devils.csv", "./data/dummy-c.csv", "./data/dummy-x.csv"))
             //if (!$viz->init(100, 2, "", "./data/arash-d.csv", "./data/arash-c.csv", "./data/arash-x.csv"))
-            if (!$viz->init(100, 2, "", "./data/arash-1/d.csv", "./data/arash-1/c.csv", "./data/arash-1/x.csv", "./data/arash-1/coeff.csv"))
+            if (!$viz->init($_n, $_cpn, "./data/$set/names.csv", "./data/$set/d.csv", "./data/$set/c.csv", "./data/$set/x.csv", "./data/$set/coeff.csv"))
             {
                 echo $viz->getError();
             }
@@ -57,9 +66,9 @@
             print_r($viz->getStats());
             print_r($viz->getObjectiveFunctionValue());
             echo '<div id="fingerprint-wrapper">';
-            echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=random&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
+            echo '<img width="200" height="200" class="fingerprint" src="./fingerprint.php?nodesize=20&type=random&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" /> <br />';
             //echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=order&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
-            echo '<img class="fingerprint" src="./fingerprint.php?nodesize=20&type=specterum&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" />';
+            echo '<img width="200" height="200" class="fingerprint" src="./fingerprint.php?nodesize=20&type=specterum&cache='.base64_encode($viz->getCacheFilename()).'" alt="" border="0" /> <br />';
             
             $stat = $viz->getStats();
             foreach ($stat as $key=>$val)

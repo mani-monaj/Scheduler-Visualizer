@@ -124,15 +124,26 @@ class CVisualizer
         if (!empty($paramfile)) {
             $dummy = array();
             list($row, $col) = $this->readMatrixFromFile($dummy, $paramfile, "\n", " ");
-            if (($row != 1) || ($col != 3))
+            
+            if (($row == 1) && ($col == 3))
+            {
+                $this->wp = abs($dummy[0][0]);
+                $this->wd = abs($dummy[0][1]);
+                $this->wc = abs($dummy[0][2]);
+            }
+            else if (($row == 3) && ($col == 1))
+            {
+                $this->wp = abs($dummy[0][0]);
+                $this->wd = abs($dummy[1][0]);
+                $this->wc = abs($dummy[2][0]);
+            }
+            else //if (($row != 1) || ($col != 3))
             {
                 $this->logError("Error: param matrix size should be (1, 3), but it is ($row, $col).");
                 return false;
             }
             
-            $this->wp = abs($dummy[0][0]);
-            $this->wd = abs($dummy[0][1]);
-            $this->wc = abs($dummy[0][2]);
+            
             
             //Arash: obj = wd*devil+wc*commpai+wp*node_on ; wd > 0, wc < 0, wp > 0; Min 
             //

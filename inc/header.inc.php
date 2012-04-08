@@ -1,3 +1,4 @@
+<?php error_reporting(E_ALL & ~E_NOTICE); ?>
 <!doctype html>
 
 <!--[if lt IE 7 ]> <html class="ie ie6 no-js" lang="en"> <![endif]-->
