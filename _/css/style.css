@@ -157,13 +157,13 @@ body {
 
 article {
     float: left;
-    width: 700px;
-    margin: 0;    
+    width: 760px;
+    margin: 0;  
 }
 
 aside {
-    width: 200px;
-    float: left;
+    width: 150px;
+    float: right;
     margin: 0;
 }
 div.node {
@@ -276,7 +276,25 @@ div.green {
 }
 
 
+#infobar {
+    margin: 3px;
+}
 
+#infobar table {
+    border: 1px solid gray;
+}
+
+#infobar table td {
+    padding: 2px;
+    text-align: center;
+}
+
+#infobar table .odd {
+    background-color: lightgray;
+}
+
+#infobar table .even {
+}
 /* Print styles!
 -------------------------------------------------------------------------------*/
 @media print {

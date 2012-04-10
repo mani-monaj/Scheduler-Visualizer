@@ -434,9 +434,10 @@ class CVisualizer
     
     public function generateJQueryForHighlights($sym = true)
     {
-        $base = sqrt($this->numNodes) * $this->coresPerNode;
+        $break_size = floor(sqrt($this->numNodes));
+        $base = $break_size * $this->coresPerNode;
         
-        $coreSize = round(700 - ($base * 12)) / ($base);
+        $coreSize = round(760 - ($base * 12)) / ($base);
         $js = "";
         $js .= "$('.core').width($coreSize);";
         $js .= "$('.core').height(".($coreSize / 2.0).");";

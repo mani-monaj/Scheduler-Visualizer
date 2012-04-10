@@ -1,7 +1,5 @@
 <?php require_once("./inc/header.inc.php");?>
-<div class="wrapper">
-	<article>
-		<?php
+<?php
             require_once("./inc/visualizer.inc.php");
             
             $set = $_GET['set'];            
@@ -14,9 +12,52 @@
             if ($_cpn == 0) $_cpn = 2;
             
             $viz = new CVisualizer();
+            $ready = $viz->init($_cpn, "./data/$set/names.csv", "./data/$set/d.csv", "./data/$set/c.csv", "./data/$set/x.csv", "./data/$set/coeff.csv");
+            ?>
+<div class="wrapper">
+	<div id="infobar">
+            <?php if ($ready) : ?>
+            <?php
+                $stat = $viz->getStats();
+                $obj = $viz->getObjectiveFunctionValue();
+            ?>
+            <table width="100%" border="0" cellpadding="2" cellspacing="2">
+                <tr class="odd"">
+                    <td>#Nodes</td>
+                    <td>#Cores</td>
+                    <td>#Processes</td>
+                    <td>Wp</td>
+                    <td>Wc</td>
+                    <td>Wd</td>
+                    <td>#Contentions</td>
+                    <td>#CoScheduledPairs</td>
+                    <td>#PowerOnNodes</td>
+                    <td>Obj Function (A)</td>
+                    <td>Obj Function (J)</td>
+                </tr>
+                <tr class="even">
+                    <td><?=$stat["numNodes"]?></td>
+                    <td><?=$stat["numCores"]?></td>
+                    <td><?=$stat["numProcesses"]?></td>
+                    <td><?=$stat["wp"]?></td>
+                    <td><?=$stat["wc"]?></td>
+                    <td><?=$stat["wd"]?></td>
+                    <td><?=$stat["numContendedNodes"]?></td>
+                    <td><?=$stat["numCoScheduledBuddies"]?></td>
+                    <td><?=$stat["numPoweredOnNodes"]?></td>
+                    <td><?=$obj["arash"]?></td>
+                    <td><?=$obj["jess"]?></td>
+                </tr>
+            </table>
+            <?php endif; ?>
+        </div>
+        <br clear="all" style="clear: both" />
+        <article>
+		
+            <?php
             //if (!$viz->init(4, 2, "./data/dummy-names.csv", "./data/dummy-devils.csv", "./data/dummy-c.csv", "./data/dummy-x.csv"))
             //if (!$viz->init(100, 2, "", "./data/arash-d.csv", "./data/arash-c.csv", "./data/arash-x.csv"))
-            if (!$viz->init($_cpn, "./data/$set/names.csv", "./data/$set/d.csv", "./data/$set/c.csv", "./data/$set/x.csv", "./data/$set/coeff.csv"))
+            if (!$ready)
             {
                 echo $viz->getError();
             }
