@@ -7,6 +7,7 @@ if (!($handle = opendir($path)))
 }
 ?>
 <div id="list" class="wrapper">
+    <h1>Schedule Visualizer</h1>
     <h2>Please select a solution from this list : </h2>
     <div>
         <form name="selection" action="./index.php" method="get">
