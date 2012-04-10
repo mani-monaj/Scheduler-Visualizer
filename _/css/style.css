@@ -282,6 +282,7 @@ div.green {
 
 #infobar table {
     border: 1px solid gray;
+    font-size: 1.1em;
 }
 
 #infobar table td {
@@ -294,6 +295,30 @@ div.green {
 }
 
 #infobar table .even {
+}
+
+#togglec {
+    width: 150px;
+    margin: 0;
+}
+
+#list {
+    text-align: center;
+    margin-top: 200px;
+}
+
+#list h2 {
+    font-size: 2em;
+    margin: 10px 0;
+}
+
+#list input, #list select {
+    width: 300px;
+    font-size: 1.4em;
+}
+
+#list #submit {
+    width: 50px;
 }
 /* Print styles!
 -------------------------------------------------------------------------------*/
