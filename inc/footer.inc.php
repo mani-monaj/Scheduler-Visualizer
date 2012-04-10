@@ -47,7 +47,7 @@
        //$(".core").css({ opacity: 0.75});  
        
        $("#togglec").hover(function () {
-          <?php echo $viz->generateJSONForConnections(false); ?> 
+          <?php echo $viz->generateJSONForConnections(true); ?> 
             for (var row in conn)
             {
                 var node = conn[row];
@@ -70,8 +70,9 @@
                         target: buddy, 
                         anchor: "AutoDefault",
                         endpoint: "Blank",
-                        //connector: [ "StateMachine", 50],     
-                        connector: [ "Flowchart", 10],
+                        overlays: [["Arrow", {location:1,width:20, length:20}]],
+                        connector: [ "StateMachine", 50],     
+                        //connector: [ "Flowchart", 10],
                         paintStyle: { strokeStyle: "black", lineWidth:4 }
                     });
                 }
@@ -85,11 +86,11 @@
        
        
        $.fn.hilight = function(source) {      
-           $(source).css("border-color", "red");
+           $(source).css("border-color", "black");
            $(source).stop(true, true, true).effect("highlight", {}, 1000);
             return $(this).each(function() {
                 var sinkId = $(this).attr("id");                
-                $(this).css("border-color", "red");
+                $(this).css("border-color", "black");
                 $(this).stop(true, true, true).effect("highlight", {}, 1000);
 
                 var sourceId = $(source).attr("id");
@@ -123,8 +124,8 @@
         //$(".node").width(50);
         //$(".node").height(50);
         
-        $(".offnode").css("background-color", "lightgray");
-        $(".offnode").children().css("background-color", "lightgray");
+        $(".offnode").css("background-color", "#fafafa");
+        $(".offnode").children().css("background-color", "#fafafa");
         <?php echo $viz->generateJQueryForHighlights(); ?>
     });
     

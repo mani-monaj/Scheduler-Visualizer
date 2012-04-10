@@ -30,13 +30,13 @@ class CVisualizer
     
     private $cache;
     
-    function init($numnodes, $corespernode, $namesfile, $devilfile, $commfile, $solfile, $paramfile = "") {
+    function init($corespernode, $namesfile, $devilfile, $commfile, $solfile, $paramfile = "") {
         $this->errorList = array();
         $this->idMap = array();
         
         $this->numNodes = $numnodes;
         $this->coresPerNode = $corespernode;
-        $this->numCores = $numnodes * $corespernode;
+        
         
         
         $this->processNames = array();
@@ -85,11 +85,11 @@ class CVisualizer
             return false;
         }
         
-        if ($this->numProcesses > $this->numCores)
-        {
-            $this->logError("Error : Number of processes can not be more than cores");
-            return false;
-        }
+//        if ($this->numProcesses > $this->numCores)
+//        {
+//            $this->logError("Error : Number of processes can not be more than cores");
+//            return false;
+//        }
         
         list($row, $col) = $this->readMatrixFromFile($this->mC, $commfile, "\n", " ");
         
@@ -115,11 +115,15 @@ class CVisualizer
         
         list($row, $col) = $this->readMatrixFromFile($this->mX, $solfile, "\n", " ");
         
-        if (($row != $this->numCores) || ($col != $this->numProcesses))
+        //if (($row != $this->numCores) || ($col != $this->numProcesses))
+        if (($col != $this->numProcesses))
         {
             $this->logError("Error: Solution matrix size should be ($this->numCores, $this->numProcesses), but it is ($row, $col).");
             return false;
         }
+        
+        $this->numCores = $row;
+        $this->numNodes = $row / $this->coresPerNode;
     
         if (!empty($paramfile)) {
             $dummy = array();
@@ -176,6 +180,7 @@ class CVisualizer
             "wc" => $this->wc,
             "numNodes" => $this->numNodes,
             "numCores" => $this->numCores,
+            "numProcesses" => $this->numProcesses,
             "coresPerNode" => $this->coresPerNode,
             "numContendedNodes" => $this->numContendedNodes,
             "numPoweredOnNodes" => $this->numPoweredOnNodes,
@@ -383,11 +388,11 @@ class CVisualizer
         $cclass = ($this->nodesData[$ni]["isCoscheduled"]) ? "green" : "";
         $pclass = ($this->nodesData[$ni]["isFullyUtilized"]) ? "green" : "";
         echo '<br clear="all" style="clear: both;" />';
-        echo '<div class="bar shared-resource '.$dclass.'"></div>';
+        echo '<div class="bar shared-resource '.$dclass.'">D</div>';
         echo '<br clear="all" style="clear: both;" />';
-        echo '<div class="bar comm-buddies '.$cclass.'"></div>';
+        echo '<div class="bar comm-buddies '.$cclass.'">C</div>';
         echo '<br clear="all" style="clear: both;" />';
-        echo '<div class="bar power-util '.$pclass.'"></div>';
+        echo '<div class="bar power-util '.$pclass.'">P</div>';
         echo '</div>';
         
     }
