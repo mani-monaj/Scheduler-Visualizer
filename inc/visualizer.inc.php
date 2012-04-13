@@ -293,6 +293,38 @@ class CVisualizer
         
         return array("arash" => $arash, "jess" => $jess);
     }
+    
+    public function getNormalizedObjectiveFunctionValue()
+    {
+        $max_o = min($this->numProcesses, $this->numNodes);
+        
+        $numDevils = 0;
+        
+        foreach ($this->mD as $p)
+        {            
+            if ($p[1] == 1) $numDevils++;
+        }
+        
+        $max_d = floor($numDevils / $this->coresPerNode);
+        
+        $numConns = 0;
+        for ($i = 0; $i < $this->numProcesses; $i++)
+        {
+            for ($j = 0; $j < $this->numProcesses; $j++)
+            {
+                if ($this->mC_NS[$i][$j] == 1) $numConns++;
+            }
+        }
+        
+        $max_c = $numConns;
+        
+        //die ("$max_o $max_d $max_c $numDevils");
+        $arash = 
+            (($this->wd * $this->numContendedNodes)  / $max_d)
+            + ((-$this->wc * $this->numCoScheduledBuddies) / $max_c)
+            + (($this->wp * $this->numPoweredOnNodes) / $max_o);
+        return array("arash" => $arash);        
+    }
     /**
      * Reads CSV and imports it to a matrix
      * @param type $mat Pointer to the matrix

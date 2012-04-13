@@ -341,6 +341,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3dced', end
 #list #submit {
     width: 50px;
 }
+
 /* Print styles!
 -------------------------------------------------------------------------------*/
 @media print {

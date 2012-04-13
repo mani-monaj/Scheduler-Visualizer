@@ -20,6 +20,7 @@
             <?php
                 $stat = $viz->getStats();
                 $obj = $viz->getObjectiveFunctionValue();
+                $obj_n = $viz->getNormalizedObjectiveFunctionValue();
             ?>
             <table width="100%" border="0" cellpadding="2" cellspacing="2">
                 <tr class="odd"">
@@ -34,6 +35,7 @@
                     <td>#PowerOnNodes</td>
                     <td>Obj Function (A)</td>
                     <td>Obj Function (J)</td>
+                    <td>Obj Funcrtion (AN) </td>
                 </tr>
                 <tr class="even">
                     <td><?=$stat["numNodes"]?></td>
@@ -47,6 +49,7 @@
                     <td><?=$stat["numPoweredOnNodes"]?></td>
                     <td><?=$obj["arash"]?></td>
                     <td><?=$obj["jess"]?></td>
+                    <td><?=$obj_n["arash"]?></td>
                 </tr>
             </table>
             <?php endif; ?>
