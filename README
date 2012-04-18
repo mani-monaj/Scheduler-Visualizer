@@ -1,3 +1,16 @@
 This is the Visualization part for SFU CMPT886 Project in Spring 2012.
 
-More info to be added soon.
+To use this visualizaer you need a running web server with PHP 5.2+ 
+installed. Apache 2 is tested and recommended.
+
+To use this tool, copy the files to your web server. Create a folder 
+named `cache` in the application directory and give it proper write 
+permissions for the web server.
+
+To data folder contains a FORMAT file which defines the format used to 
+feed data to the visualizer. 
+
+Start by pointing your browser to the list.php file.
+
+Due to heavy usage of HTML5 and CSS3 please use a modern web browser to 
+use this visualization tool.
